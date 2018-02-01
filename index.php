@@ -159,6 +159,8 @@
     </script>
 
     <!-- Graphs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment-with-locales.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/locale/es.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 
     <script>
@@ -170,7 +172,7 @@
         $("body").tooltip({ selector: '[data-toggle=tooltip]' });
 
         $("#button_exportar").click(function() {
-          window.location.replace("ajax/createCSV.php?book="+book);
+          window.location.replace("api/createCSV.php?book="+book);
         });
 
         $("#menu_btc_mxn").click(function() {
@@ -235,7 +237,7 @@
 
       function loadData(book, interval) {
         $.ajax({
-          url: "ajax/getData.php",
+          url: "api/getData.php",
           contentType: "application/json; charset=utf-8",
           dataType: 'json',
           method: "GET",
@@ -259,6 +261,8 @@
             var vwapColorLight = '#9d55c1';
             var tipo_cambio;
             var pointRadius = interval == '1 DAY' ? 2 : 0;
+            var unit = 'hour';
+            var step = 1;
 
             switch (book) {
               case 'btc_mxn':
@@ -272,6 +276,21 @@
                 break;
               case 'ltc_mxn':
                 tipo_cambio = "Tipo de cambio (litcoin a pesos mexicanos)";
+                break;
+            }
+
+            switch (interval) {
+              case '1 DAY':
+                unit = 'hour';
+                step = 1;
+                break;
+              case '1 WEEK':
+                unit = 'hour';
+                step = 6;
+                break;
+              case '1 MONTH':
+                unit = 'day';
+                step = 1;
                 break;
             }
 
@@ -314,7 +333,7 @@
             }
 
             var chartData = {
-              labels: arrHora,
+              labels: arrTickDate,
               datasets : [
                 {
                   label: book,
@@ -378,22 +397,20 @@
                 maintainAspectRatio: false,
                 scales: {
                   xAxes: [{
-                    ticks: {
-                      autoSkip: true,
-                      maxTicksLimit: 20
+                    type: "time",
+                    time: {
+                      unit: unit,
+                      unitStepSize: step,
+                      tooltipFormat: "DD/MM/YYYY, h:mm a",
+                      displayFormats: {
+                        hour: 'H:mm'
+                      }
                     }
                   }]
                 },
                 legend: {
                   labels: {
                     usePointStyle: true
-                  }
-                },
-                tooltips: {
-                  callbacks: {
-                    title: function(tooltipItem){
-                      return arrTickDate[tooltipItem[0].index];
-                    }
                   }
                 }
               }
