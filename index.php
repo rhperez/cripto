@@ -251,6 +251,7 @@
             var arrAsk = [];
             var arrBid = [];
             var arrTickDate = [];
+            var arrStatus = [];
             var lastColor = '#6495ED';
             var lastColorLight = '#00BFFF';
             var bidColor = '#56C78B';
@@ -298,11 +299,12 @@
               arrId.push(data[i].id_tick);
               arrHora.push(data[i].hora);
               arrTickDate.push(data[i].tick_date);
-              arrLast.push(data[i].bitso_last);
-              arrVolume.push(data[i].bitso_volume);
-              arrVwap.push(data[i].bitso_vwap);
-              arrAsk.push(data[i].bitso_ask);
-              arrBid.push(data[i].bitso_bid);
+              arrLast.push(data[i].status == 1 ? data[i].bitso_last : NaN);
+              arrVolume.push(data[i].status == 1 ? data[i].bitso_volume : NaN);
+              arrVwap.push(data[i].status == 1 ? data[i].bitso_vwap : NaN);
+              arrAsk.push(data[i].status == 1 ? data[i].bitso_ask : NaN);
+              arrBid.push(data[i].status == 1 ? data[i].bitso_bid : NaN);
+              arrStatus.push(data[i].status);
             }
 
             $("table#table_data thead").empty();
@@ -319,16 +321,14 @@
 
             $("table#table_data tbody").empty();
 
-            for (var i = 1; i <= 20; i++) {
-              var row = '<tr>'
-                + '<td>' + i + '</td>'
-                + '<td>' + arrLast[arrLast.length - i] + '</td>'
+            for (var i = 1; i <= 50; i++) {
+              var row = '<tr><td>' + i + '</td>';
+                row += '<td>' + arrLast[arrLast.length - i] + '</td>'
                 + '<td>' + arrVolume[arrVolume.length - i] + '</td>'
                 + '<td>' + arrAsk[arrAsk.length - i] + '</td>'
                 + '<td>' + arrBid[arrBid.length - i] + '</td>'
                 + '<td>' + arrVwap[arrVwap.length - i] + '</td>'
-                + '<td>' + arrTickDate[arrTickDate.length - i] + '</td>'
-                + '</tr>';
+                + '<td>' + arrTickDate[arrTickDate.length - i] + '</td></tr>';
               $("table#table_data tbody").append(row);
             }
 

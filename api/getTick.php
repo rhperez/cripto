@@ -16,7 +16,7 @@
 
   function getTick($url_base, $book, $status) {
     $conn = connect();
-    $str_query = "SELECT bitso_book, bitso_volume, bitso_last, bitso_high, bitso_low, bitso_vwap, bitso_ask, bitso_bid, created_at FROM Requested_Ticks WHERE bitso_book = '".$book."' AND status = ".$status." AND created_at >= now() - INTERVAL 10 SECOND";
+    $str_query = "SELECT id_tick, bitso_book, bitso_volume, bitso_last, bitso_high, bitso_low, bitso_vwap, bitso_ask, bitso_bid, created_at FROM Requested_Ticks WHERE bitso_book = '".$book."' AND status = ".$status." AND created_at >= now() - INTERVAL 10 SECOND";
     $result = $conn->query($str_query);
     if ($result->num_rows > 0) {
       $ret_array = array();
